@@ -1,0 +1,12 @@
+{
+  "name": "docs-lookup",
+  "description": "Query a self-hosted docs-mcp-server (Grounded Docs MCP Server) documentation index well: phrasing, versions, fetching full pages, fallbacks, and index smoke tests.",
+  "author": {
+    "name": "allenwalker3",
+    "url": "https://github.com/allenwalker3"
+  },
+  "homepage": "https://github.com/allenwalker3/docs-mcp-server-skills",
+  "repository": "https://github.com/allenwalker3/docs-mcp-server-skills",
+  "license": "MIT",
+  "keywords": ["docs-mcp-server", "grounded-docs", "mcp", "documentation", "rag", "skills"]
+}

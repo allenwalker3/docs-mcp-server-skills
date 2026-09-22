@@ -1,0 +1,17 @@
+{
+  "name": "docs-mcp-server-skills",
+  "owner": {
+    "name": "allenwalker3",
+    "url": "https://github.com/allenwalker3"
+  },
+  "metadata": {
+    "description": "Agent skills for arabold/docs-mcp-server (Grounded Docs MCP Server)."
+  },
+  "plugins": [
+    {
+      "name": "docs-lookup",
+      "source": "./",
+      "description": "Query a self-hosted docs-mcp-server (Grounded Docs MCP Server) documentation index well: phrasing, versions, fetching full pages, fallbacks, and index smoke tests."
+    }
+  ]
+}
