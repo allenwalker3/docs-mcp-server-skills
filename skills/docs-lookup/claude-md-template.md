@@ -26,8 +26,8 @@ This project's library docs are indexed in a docs-mcp-server instance.
 
 | `library` | Versioned? | `version` to pass | Docs root | `.md` pages? | Last indexed |
 |---|---|---|---|---|---|
-| `react` | no | omit | https://react.dev/reference | yes | 2026-09-21 |
-| `typescript` | yes | installed major as `N.x` (from `package.json`) | https://www.typescriptlang.org/docs | no | 2026-09-01 |
+| `react` | no | omit | https://react.dev/reference/ | yes | 2026-09-21 |
+| `typescript` | yes | installed major as `N.x` (from `package.json`) | https://www.typescriptlang.org/docs/ | no | 2026-09-01 |
 
 **Before writing, editing, or debugging code that uses a library in this table, invoke the
 `docs-lookup` skill and query this server.** Do not answer from memory about these
@@ -68,6 +68,10 @@ Afterwards, update "Last indexed" above.
   falls back to the unversioned docs, so passing one is harmless there.
 - **`.md` pages?** Tells the agent whether `<url>.md` returns lean Markdown when it
   fetches the full page behind a hit.
+- **Docs root.** Record the directory that contains the pages, with a trailing slash. It is
+  what a re-index starts from, and a landing-page URL there (`/guide/overview` rather than
+  `/guide/`) makes the default `subpages` scope index a single page. `docs-lookup` explains
+  the rule.
 - **Last indexed.** Lets the agent judge staleness against the installed version.
 - **Source precedence.** Other doc servers such as Context7 tell the agent to use them
   for every library. Without an explicit order, the two compete.

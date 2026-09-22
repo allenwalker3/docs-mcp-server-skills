@@ -1,11 +1,11 @@
 ---
 name: docs-lookup
-description: How to search a docs-mcp-server (Grounded Docs MCP Server) index well. Use before writing, editing, or debugging code against a library indexed in docs-mcp-server (listed in the project's CLAUDE.md or returned by list_libraries), and whenever a search_docs call returns noise or nothing.
+description: How to search a docs-mcp-server (Grounded Docs MCP Server) index well. Use before writing, editing, or debugging code against a library indexed in docs-mcp-server (listed in the project's CLAUDE.md or returned by list_libraries), whenever a search_docs call returns noise or nothing, and before indexing or re-indexing a site with scrape_docs or the CLI.
 license: MIT
 compatibility: Requires a running arabold/docs-mcp-server instance (local or remote) connected as an MCP server.
 metadata:
   author: allenwalker3
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Docs Lookup
@@ -92,6 +92,27 @@ Check it, then degrade gracefully. Never silently guess.
    then append `.md` where the site supports it), then to Context7 or a plain web search.
 4. **Tell the user which source you actually used** whenever it was not the index.
 
+## Indexing: start from a directory URL — REQUIRED
+
+`scope` defaults to `subpages`, which anchors the crawl to the **base directory** of the
+start URL. A last path segment with no trailing slash and no file extension is treated as
+a directory in its own right, so a landing page anchors the crawl beneath itself and every
+real page — a sibling one level up — falls out of scope. The job still reports `completed`,
+having indexed exactly one page, and the library may not appear in `list_libraries` at all.
+
+Pass the directory that *contains* the pages, with a trailing slash:
+
+```
+✅ scrape mylib https://docs.example.com/guide/
+❌ scrape mylib https://docs.example.com/guide/overview   # indexes 1 page, reports success
+```
+
+Redirects do not move the anchor, so the trailing-slash form is safe even when the site
+redirects it to a landing page. `/guide/index.html` and a single-segment `/guide` already
+resolve to the right directory and need no change. When the pages are scattered rather than
+nested, widen deliberately instead: `--scope hostname` with an include pattern such as
+`/^\/guide\//`.
+
 ## Smoke-testing a new index
 
 Indexing fails silently: JavaScript-rendered sites scrape as empty shells, nav chrome
@@ -105,10 +126,12 @@ expected canonical URL near the top:
 
 Then fetch one result page and confirm it is real content, not a cookie banner or 404
 shell. Compare the page count in the web UI (the address in the project's CLAUDE.md;
-`http://localhost:6280` by default) against the site's sitemap. A count far below the
-sitemap usually means the site answered the server's Markdown-preferring `Accept` header
-with Markdown that carries no navigation links, so whole sections were never discovered.
-Raising depth or page limits will not fix that.
+`http://localhost:6280` by default) against the site's sitemap. A shortfall has two usual
+causes, and the size of the gap tells them apart. **Exactly one page** means the start URL
+anchored the scope beneath itself — re-index from the directory URL above. **Most pages but
+a few missing** means the site answered the server's Markdown-preferring `Accept` header with
+Markdown that carries no navigation links, so pages linked only from the sidebar were never
+discovered. Raising depth or page limits fixes neither.
 
 The `scrape_docs` tool cannot set request headers or the scrape mode, so re-index from HTML
 with the CLI: `scrape <library> <url> --header "Accept: text/html" --scrape-mode fetch`.
